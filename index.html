@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>광합성 가상 실험실 v4.0</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>🌿 광합성 가상 실험실 v4.0</h1>
+
+    <section>
+        <h2>1. 탐구 문제</h2>
+        <div class="box"><strong>"빛의 세기, 이산화탄소 농도, 온도가 광합성량에 어떤 영향을 미칠까?"</strong></div>
+    </section>
+
+    <section>
+        <h2>2. 독립변인 선택</h2>
+        <div class="radio-group">
+            <label><input type="radio" name="independent" value="light" checked onclick="updateVariables()"> 💡 빛의 세기 실험</label>
+            <label><input type="radio" name="independent" value="co2" onclick="updateVariables()"> 🧪 이산화탄소(CO₂) 농도 실험</label>
+            <label><input type="radio" name="independent" value="temp" onclick="updateVariables()"> 🌡️ 온도 실험</label>
+        </div>
+    </section>
+
+    <section>
+        <h2>3. 변인 확인</h2>
+        <div class="box" id="variable-info"></div>
+    </section>
+
+    <section>
+        <h2>4. 실험 실행</h2>
+        <div class="control-panel">
+            <div id="slide-light">
+                <label>빛의 세기 (lux): <span id="val-light">50</span></label>
+                <input type="range" id="input-light" min="0" max="100" step="10" value="50" oninput="onControlInput()">
+            </div>
+            <div id="slide-co2">
+                <label>이산화탄소 농도 (%): <span id="val-co2">0.1</span></label>
+                <input type="range" id="input-co2" min="0" max="0.5" step="0.05" value="0.1" oninput="onControlInput()">
+            </div>
+            <div id="slide-temp">
+                <label>온도 (°C): <span id="val-temp">20</span></label>
+                <input type="range" id="input-temp" min="0" max="50" step="5" value="20" oninput="onControlInput()">
+            </div>
+            
+            <div id="live-result">현재 예상 기포 수: 0 🫧</div>
+            
+            <div id="ctrl-warning" class="warning">⚠️ 경고: 통제변인이 변경되었습니다!</div>
+            <button type="button" class="btn-record" onclick="runExperiment()">📊 실험 데이터 기록하기</button>
+        </div>
+    </section>
+
+    <section>
+        <h2>5. 결과 표</h2>
+        <table id="result-table">
+            <thead><tr id="table-header"></tr></thead>
+            <tbody id="table-body"></tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>6. 그래프</h2>
+        <button type="button" class="btn-graph" onclick="updateChart()">📈 그래프 생성하기</button>
+        <canvas id="myChart" width="400" height="280"></canvas>
+    </section>
+
+    <section>
+        <h2>7. 결과 해석 및 결론 도출</h2>
+        <div class="quiz-container">
+            <div class="quiz-row">
+                <span>실험 결과, </span>
+                <strong id="text-indep-name" style="color:#2196f3;">독립변인</strong>
+                <span>이(가) 증가할수록 </span>
+            </div>
+            <div class="quiz-row">
+                <span>광합성량은 초기에는 점차 </span>
+                <select id="select-phase1" class="quiz-select">
+                    <option value="">-- 선택 --</option>
+                    <option value="up">증가하다가</option>
+                    <option value="flat">일정하다가</option>
+                    <option value="down">감소하다가</option>
+                </select>
+            </div>
+            <div class="quiz-row">
+                <span>일정 수준 이상이 되면 </span>
+                <select id="select-phase2" class="quiz-select">
+                    <option value="">-- 선택 --</option>
+                    <option

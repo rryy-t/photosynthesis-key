@@ -3,524 +3,521 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>광합성 가상 실험실 v4.1</title>
+    <title>🌿 광합성 가상실험실 v4.5</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&family=Afacad+Flux:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* [1. DESIGN SYSTEM] 영양소 검출 앱 스타일의 파스텔 UI */
+        :root {
+            --primary: #4caf50;
+            --secondary: #dcfd8b;
+            --accent: #ff823a;
+            --purple: #bc84ee;
+            --blue: #2196f3;
+            --bg-color: #f0f4f8;
+            --card-bg: #ffffff;
+            --text-color: #2d3436;
+        }
+
+        body {
+            font-family: 'Afacad Flux', 'Malgun Gothic', sans-serif;
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 10% 10%, #dcfd8b44 0%, transparent 20%),
+                              radial-gradient(circle at 90% 90%, #bc84ee22 0%, transparent 20%);
+            background-attachment: fixed;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .main-app {
+            width: 100%;
+            max-width: 800px;
+            background: var(--card-bg);
+            border-radius: 40px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        header { text-align: center; margin-bottom: 40px; }
+        header h1 { 
+            font-family: 'Comfortaa', cursive; 
+            color: var(--text-color); 
+            font-size: 2rem; 
+            margin: 0;
+        }
+        
+        .step-pill {
+            display: inline-block;
+            background-color: var(--accent);
+            color: white;
+            padding: 8px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(255, 130, 58, 0.3);
+        }
+
+        section { margin-bottom: 50px; }
+        h2 { 
+            font-size: 1.25rem; 
+            color: #333; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        h2 i { color: var(--primary); }
+
+        /* [2. UI COMPONENTS] */
+        .card-box {
+            background: #f8fafc;
+            border-radius: 25px;
+            padding: 25px;
+            border: 1px solid #e2e8f0;
+            line-height: 1.6;
+        }
+
+        .variable-selector {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .radio-label {
+            background: #fff;
+            padding: 15px 25px;
+            border-radius: 20px;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        input[type="radio"] { transform: scale(1.5); accent-color: var(--primary); }
+        .radio-label:has(input:checked) {
+            border-color: var(--primary);
+            background-color: #f0fff4;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(76, 175, 80, 0.1);
+        }
+
+        /* 3변인 확인 그리드 */
+        .variable-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .v-item {
+            background: white;
+            padding: 20px 10px;
+            border-radius: 25px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        }
+        .v-item strong { display: block; font-size: 0.8rem; margin-bottom: 8px; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .v-item span { color: var(--text-color); font-weight: 700; font-size: 1rem; }
+
+        /* 실험 컨트롤 */
+        .control-area { display: flex; flex-direction: column; gap: 20px; }
+        .slider-group { position: relative; }
+        .slider-group label { display: block; margin-bottom: 10px; font-weight: 600; font-size: 0.95rem; }
+        .slider-group label b { color: var(--primary); font-size: 1.1rem; }
+
+        input[type="range"] {
+            width: 100%;
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            appearance: none;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            background: var(--primary);
+            border-radius: 50%;
+            border: 4px solid white;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        #live-shield {
+            background: #2d3436;
+            color: white;
+            padding: 25px;
+            border-radius: 25px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin: 10px 0;
+        }
+        #live-shield span { color: var(--secondary); font-size: 1.8rem; }
+
+        .btn {
+            border: none;
+            border-radius: 20px;
+            padding: 18px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: white;
+        }
+        .btn-main { background-color: var(--primary); box-shadow: 0 10px 20px rgba(76, 175, 80, 0.2); }
+        .btn-sub { background-color: var(--purple); box-shadow: 0 10px 20px rgba(188, 132, 238, 0.2); margin-top: 15px; }
+        .btn-grade { background-color: var(--blue); box-shadow: 0 10px 20px rgba(33, 150, 243, 0.2); margin-top: 20px; width: 100%; }
+        .btn:hover { transform: translateY(-3px); opacity: 0.9; }
+
+        .warning-tag {
+            background: #fff5f5;
+            color: #e53e3e;
+            padding: 12px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: 1px solid #fed7d7;
+            display: none;
+        }
+
+        /* 테이블 및 그래프 */
+        .table-container { overflow-x: auto; margin-top: 20px; border-radius: 20px; border: 1px solid #e2e8f0; }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        th { background: #f8fafc; padding: 15px; font-weight: 600; font-size: 0.9rem; color: #64748b; }
+        td { padding: 15px; border-top: 1px solid #f1f5f9; text-align: center; font-weight: 600; }
+
+        /* 퀴즈 섹션 */
+        .quiz-card {
+            background: #fdfdfd;
+            border: 2px dashed #cbd5e1;
+            padding: 30px;
+            border-radius: 30px;
+        }
+        .quiz-text { line-height: 2.5; font-size: 1.1rem; }
+        select {
+            padding: 8px 15px;
+            border-radius: 12px;
+            border: 2px solid var(--blue);
+            font-family: inherit;
+            font-weight: 700;
+            color: var(--blue);
+            outline: none;
+        }
+
+        .feedback {
+            margin-top: 25px;
+            padding: 25px;
+            border-radius: 25px;
+            display: none;
+            animation: bounceIn 0.5s;
+        }
+        @keyframes bounceIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        .success { background: #f0fff4; border: 1px solid #c6f6d5; color: #276749; }
+        .error { background: #fff5f5; border: 1px solid #fed7d7; color: #9b2c2c; }
+
+    </style>
 </head>
 <body>
 
-<div class="app-container">
+<div class="main-app">
     <header>
-        <h1>🌿 광합성 탐구 가상 실험실</h1>
-        <p class="tagline">Scientific Inquiry Simulator v4.1</p>
+        <div class="step-pill">Virtual Science Lab</div>
+        <h1>🌿 광합성 가상실험실</h1>
     </header>
 
-    <section class="card">
-        <h2><i class="fa-solid fa-magnifying-glass"></i> 1. 탐구 문제</h2>
-        <div class="info-box">
-            "빛의 세기, 이산화탄소 농도, 온도가 광합성량에 미치는 영향은 무엇인가?"
+    <section>
+        <h2><i class="fa-solid fa-circle-question"></i> 1단계: 탐구 문제 확인</h2>
+        <div class="card-box">
+            "빛의 세기, 이산화탄소 농도, 온도가 식물의 광합성량에 미치는 영향은 무엇일까?"
         </div>
     </section>
 
-    <section class="card">
-        <h2><i class="fa-solid fa-sliders"></i> 2. 탐구 주제 선택</h2>
-        <div class="radio-group">
-            <label><input type="radio" name="independent" value="light" checked onchange="initExperiment()"> 💡 빛의 세기 변화 실험</label>
-            <label><input type="radio" name="independent" value="co2" onchange="initExperiment()"> 🧪 이산화탄소 농도 변화 실험</label>
-            <label><input type="radio" name="independent" value="temp" onchange="initExperiment()"> 🌡️ 온도 변화 실험</label>
+    <section>
+        <h2><i class="fa-solid fa-list-check"></i> 2단계: 실험 주제 선택</h2>
+        <div class="variable-selector">
+            <label class="radio-label">
+                <input type="radio" name="independent" value="light" checked onchange="updateView()">
+                💡 빛의 세기 변화 실험
+            </label>
+            <label class="radio-label">
+                <input type="radio" name="independent" value="co2" onchange="updateView()">
+                🧪 이산화탄소 농도 변화 실험
+            </label>
+            <label class="radio-label">
+                <input type="radio" name="independent" value="temp" onchange="updateView()">
+                🌡️ 온도 변화 실험
+            </label>
         </div>
     </section>
 
-    <section class="card">
-        <h2><i class="fa-solid fa-vial-circle-check"></i> 3. 탐구 변인 확인</h2>
-        <div class="variable-grid" id="variable-info">
-            </div>
-    </section>
-
-    <section class="card">
-        <h2><i class="fa-solid fa-flask"></i> 4. 가상 실험 수행</h2>
-        <div class="control-panel">
-            <div class="slider-row">
-                <label>빛의 세기: <strong id="disp-light">50</strong> lux</label>
-                <input type="range" id="input-light" min="0" max="100" step="10" value="50" oninput="syncRealtime()">
-            </div>
-            <div class="slider-row">
-                <label>CO₂ 농도: <strong id="disp-co2">0.1</strong> %</label>
-                <input type="range" id="input-co2" min="0" max="0.5" step="0.05" value="0.1" oninput="syncRealtime()">
-            </div>
-            <div class="slider-row">
-                <label>온도: <strong id="disp-temp">20</strong> °C</label>
-                <input type="range" id="input-temp" min="0" max="50" step="5" value="20" oninput="syncRealtime()">
-            </div>
-            
-            <div id="ctrl-warning" class="warning-alert">⚠️ 통제변인이 변경되었습니다! 정확한 실험을 위해 대조 조건을 유지하세요.</div>
-            
-            <div class="live-preview">
-                현재 조건 예상 광합성량: <span id="live-bubble">0</span> 🫧
-            </div>
-            
-            <button class="btn btn-primary" onclick="recordData()">📊 실험 데이터 기록하기</button>
+    <section>
+        <h2><i class="fa-solid fa-vial-circle-check"></i> 3단계: 변인 확인</h2>
+        <div class="variable-grid">
+            <div class="v-item"><strong>조작(독립)</strong><span id="txt-indep">-</span></div>
+            <div class="v-item"><strong>통제</strong><span id="txt-ctrl">-</span></div>
+            <div class="v-item"><strong>측정(종속)</strong><span id="txt-dep">기포 발생 수</span></div>
         </div>
     </section>
 
-    <section class="card">
-        <h2><i class="fa-solid fa-table"></i> 5. 실험 결과 데이터</h2>
-        <div class="table-wrapper">
-            <table id="result-table">
-                <thead><tr id="table-header"></tr></thead>
-                <tbody id="table-body"></tbody>
+    <section>
+        <h2><i class="fa-solid fa-flask"></i> 4단계: 실험 실행</h2>
+        <div class="control-area">
+            <div class="slider-group">
+                <label>빛의 세기: <b id="val-light">50</b> lux</label>
+                <input type="range" id="rng-light" min="0" max="100" step="10" value="50" oninput="syncEngine()">
+            </div>
+            <div class="slider-group">
+                <label>이산화탄소 농도: <b id="val-co2">0.1</b> %</label>
+                <input type="range" id="rng-co2" min="0" max="0.5" step="0.05" value="0.1" oninput="syncEngine()">
+            </div>
+            <div class="slider-group">
+                <label>실험 온도: <b id="val-temp">20</b> °C</label>
+                <input type="range" id="rng-temp" min="0" max="50" step="5" value="20" oninput="syncEngine()">
+            </div>
+
+            <div id="warn-box" class="warning-tag">⚠️ 통제변인이 변경되었습니다! 대조 실험을 위해 다른 조건은 초기값으로 고정하세요.</div>
+
+            <div id="live-shield">현재 예상 결과: <span id="bubble-count">0</span> 🫧</div>
+
+            <button class="btn btn-main" onclick="recordData()"><i class="fa-solid fa-plus"></i> 실험 데이터 기록하기</button>
+        </div>
+    </section>
+
+    <section>
+        <h2><i class="fa-solid fa-table"></i> 5단계: 실험 결과 표</h2>
+        <div class="table-container">
+            <table>
+                <thead><tr id="thead-row"></tr></thead>
+                <tbody id="tbody-log"></tbody>
             </table>
         </div>
     </section>
 
-    <section class="card">
-        <h2><i class="fa-solid fa-chart-line"></i> 6. 데이터 시각화</h2>
-        <button class="btn btn-accent" onclick="drawChart()">📈 그래프 생성하기</button>
-        <canvas id="myChart" class="chart-canvas"></canvas>
+    <section>
+        <h2><i class="fa-solid fa-chart-line"></i> 6단계: 결과 그래프</h2>
+        <button class="btn btn-sub" onclick="drawGraph()"><i class="fa-solid fa-wand-magic-sparkles"></i> 그래프 생성하기</button>
+        <canvas id="chart-canvas" style="margin-top:20px;"></canvas>
     </section>
 
-    <section class="card">
-        <h2><i class="fa-solid fa-pen-nib"></i> 7. 탐구 결론 도출</h2>
-        <div class="quiz-box">
-            <p>실험 결과, <strong id="q-indep-name" class="highlight-text">독립변인</strong>이(가) 증가할수록</p>
-            <p>광합성량은 초기에는 점차 
-                <select id="sel-phase1">
+    <section>
+        <h2><i class="fa-solid fa-pen-nib"></i> 7단계: 결론 도출</h2>
+        <div class="quiz-card">
+            <div class="quiz-text">
+                실험 결과, <b id="quiz-indep" style="color:var(--blue)">독립변인</b>이(가) 증가함에 따라<br>
+                광합성량은 초기에는 
+                <select id="sel-p1">
                     <option value="">-- 선택 --</option>
                     <option value="up">증가하다가</option>
                     <option value="flat">일정하다가</option>
                     <option value="down">감소하다가</option>
-                </select>
-            </p>
-            <p>일정 수준 이상이 되면 
-                <select id="sel-phase2">
+                </select><br>
+                일정 수준 이상이 되면 
+                <select id="sel-p2">
                     <option value="">-- 선택 --</option>
                     <option value="up">더욱 증가한다.</option>
                     <option value="flat">일정해진다.</option>
                     <option value="down">급격히 감소한다.</option>
                 </select>
-            </p>
+            </div>
         </div>
-        <button class="btn btn-success" onclick="checkAnswer()">✔️ 채점 및 정답 확인</button>
-        <div id="grade-feedback" class="feedback-panel"></div>
+        <button class="btn btn-grade" onclick="gradeAnswer()"><i class="fa-solid fa-check-double"></i> 정답 확인하기</button>
+        <div id="feedback-box" class="feedback"></div>
     </section>
 </div>
 
-<script src="script.js"></script>
+<script>
+    /* [3. CORE LOGIC ENGINE] */
+    let dataLog = [];
+    let myChart = null;
+
+    // 초기 실행
+    window.onload = () => {
+        updateView();
+        syncEngine();
+    };
+
+    // 주제 변경 시 UI 및 데이터 초기화 (요청하신 3번 항목 해결)
+    function updateView() {
+        const sel = document.querySelector('input[name="independent"]:checked').value;
+        const indepTxt = document.getElementById('txt-indep');
+        const ctrlTxt = document.getElementById('txt-ctrl');
+        const quizTxt = document.getElementById('quiz-indep');
+        
+        // 데이터 및 그래프 초기화
+        dataLog = [];
+        updateTable();
+        if(myChart) myChart.destroy();
+
+        // 슬라이더 초기화
+        document.getElementById('rng-light').value = 50;
+        document.getElementById('rng-co2').value = 0.1;
+        document.getElementById('rng-temp').value = 20;
+
+        let indepName = "";
+        let ctrlName = "";
+
+        if(sel === 'light') {
+            indepName = "빛의 세기 (lux)";
+            ctrlName = "CO₂ 농도, 온도";
+        } else if(sel === 'co2') {
+            indepName = "CO₂ 농도 (%)";
+            ctrlName = "빛의 세기, 온도";
+        } else {
+            indepName = "온도 (°C)";
+            ctrlName = "빛의 세기, CO₂ 농도";
+        }
+
+        indepTxt.innerText = indepName;
+        ctrlTxt.innerText = ctrlName;
+        quizTxt.innerText = indepName.split(' ')[0];
+        
+        updateTableHead(indepName);
+        syncEngine();
+    }
+
+    // 과학적 수식 시뮬레이션
+    function calculate() {
+        const sel = document.querySelector('input[name="independent"]:checked').value;
+        const L = parseFloat(document.getElementById('rng-light').value);
+        const C = parseFloat(document.getElementById('rng-co2').value);
+        const T = parseFloat(document.getElementById('rng-temp').value);
+        
+        let result = 0;
+        if(sel === 'light') {
+            result = L >= 80 ? 33 : Math.round(40 * (L / (L + 16)));
+        } else if(sel === 'co2') {
+            result = C >= 0.25 ? 40 : Math.round(43 * (C / (C + 0.02)));
+        } else {
+            // 온도: 35도 정점 벨 커브
+            if(T <= 35) result = Math.round(5 + (T * 0.9));
+            else result = Math.round(Math.max(0, 36 - ((T - 35) * 3)));
+        }
+
+        // 변인 통제 감지 (교육적 장치)
+        let isViolated = false;
+        if(sel === 'light' && (C !== 0.1 || T !== 20)) isViolated = true;
+        if(sel === 'co2' && (L !== 50 || T !== 20)) isViolated = true;
+        if(sel === 'temp' && (L !== 50 || C !== 0.1)) isViolated = true;
+
+        document.getElementById('warn-box').style.display = isViolated ? 'block' : 'none';
+        return isViolated ? Math.round(result * 0.3) : result;
+    }
+
+    function syncEngine() {
+        document.getElementById('val-light').innerText = document.getElementById('rng-light').value;
+        document.getElementById('val-co2').innerText = document.getElementById('rng-co2').value;
+        document.getElementById('val-temp').innerText = document.getElementById('rng-temp').value;
+        document.getElementById('bubble-count').innerText = calculate();
+    }
+
+    function recordData() {
+        const sel = document.querySelector('input[name="independent"]:checked').value;
+        let xVal = 0;
+        if(sel === 'light') xVal = document.getElementById('rng-light').value;
+        else if(sel === 'co2') xVal = document.getElementById('rng-co2').value;
+        else xVal = document.getElementById('rng-temp').value;
+
+        const yVal = calculate();
+        
+        // 중복 제거 후 저장 및 정렬
+        dataLog = dataLog.filter(d => d.x !== xVal);
+        dataLog.push({ x: parseFloat(xVal), y: yVal });
+        dataLog.sort((a, b) => a.x - b.x);
+        updateTable();
+    }
+
+    function updateTableHead(name) {
+        document.getElementById('thead-row').innerHTML = `<th>${name}</th><th>기포 수 (🫧/분)</th>`;
+    }
+
+    function updateTable() {
+        const body = document.getElementById('tbody-log');
+        body.innerHTML = '';
+        dataLog.forEach(d => {
+            body.innerHTML += `<tr><td>${d.x}</td><td>${d.y} 🫧</td></tr>`;
+        });
+    }
+
+    function drawGraph() {
+        if(dataLog.length < 2) { alert("데이터를 2개 이상 모아야 그래프를 그릴 수 있어요!"); return; }
+        const ctx = document.getElementById('chart-canvas').getContext('2d');
+        if(myChart) myChart.destroy();
+
+        myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: dataLog.map(d => d.x),
+                datasets: [{
+                    label: '광합성량(기포 수)',
+                    data: dataLog.map(d => d.y),
+                    borderColor: '#4caf50',
+                    backgroundColor: 'rgba(220, 253, 139, 0.3)',
+                    borderWidth: 5,
+                    pointRadius: 8,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#4caf50',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: { title: { display: true, text: '독립변인 수치' } },
+                    y: { min: 0, max: 50, title: { display: true, text: '기포 수' } }
+                }
+            }
+        });
+    }
+
+    function gradeAnswer() {
+        const sel = document.querySelector('input[name="independent"]:checked').value;
+        const p1 = document.getElementById('sel-p1').value;
+        const p2 = document.getElementById('sel-p2').value;
+        const fb = document.getElementById('feedback-box');
+
+        if(!p1 || !p2) { alert("결론을 완성하기 위해 모든 칸을 채워주세요!"); return; }
+
+        let isCorrect = false;
+        if(sel === 'temp') {
+            if(p1 === 'up' && p2 === 'down') isCorrect = true;
+        } else {
+            if(p1 === 'up' && p2 === 'flat') isCorrect = true;
+        }
+
+        fb.style.display = "block";
+        fb.className = `feedback ${isCorrect ? 'success' : 'error'}`;
+        fb.innerHTML = isCorrect ? 
+            `<h3>🎉 정답입니다!</h3>탐구 결과를 통해 광합성 원리를 완벽하게 도출해냈습니다.` : 
+            `<h3>😥 다시 한 번 생각해볼까요?</h3>그래프의 모양이 처음에는 어떻게 되고, 나중에는 어떻게 변하는지 다시 확인해 보세요.`;
+        
+        fb.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
 </body>
 </html>
 
-#### 📄 style.css
-```css
-/* 프리미엄 컨설팅 스타일 디자인 시스템 */
-:root {
-    --primary: #003366; /* McKinsey Blue */
-    --accent: #11caa0;  /* Emerald Green */
-    --warning: #e63946;
-    --bg: #f8fafc;
-    --card-shadow: 0 10px 30px rgba(0, 51, 102, 0.08);
-}
+### 💡 v4.5 "Premium" 개선 사항 요약:
+1.  **디자인 교체**: 보내주신 영양소 시뮬레이션 앱처럼 **파스텔 색상 조합**과 **둥글둥글한 버튼/카드** 디자인을 적용했습니다.
+2.  **변인 확인(3단계) 수정**: 라디오 버튼 선택에 따라 독립/통제 변인이 표 형식으로 **즉시 업데이트**됩니다.
+3.  **그래프 엔진 정상화**: `recordData` 함수가 데이터를 누적하면 `drawGraph`가 `Chart.js`를 통해 X축 단위가 포함된 그래프를 정확히 그려냅니다.
+4.  **실시간 상호작용**: 슬라이더 조작 시 `live-shield` 영역에서 기포 수가 실시간으로 변화하여 훨씬 생동감 있는 실험이 가능합니다.
 
-body {
-    margin: 0;
-    padding: 20px;
-    font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    background-attachment: fixed;
-    color: #1e293b;
-    display: flex;
-    justify-content: center;
-}
-
-.app-container {
-    width: 100%;
-    max-width: 720px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
-header {
-    text-align: center;
-    padding: 20px 0;
-}
-
-header h1 {
-    color: var(--primary);
-    margin: 0;
-    font-size: 2rem;
-    letter-spacing: -1px;
-}
-
-.tagline {
-    color: var(--accent);
-    font-weight: bold;
-    font-size: 0.9rem;
-    margin-top: 5px;
-}
-
-.card {
-    background: rgba(255, 255, 255, 0.92);
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: var(--card-shadow);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-h2 {
-    font-size: 1.2rem;
-    color: var(--primary);
-    margin-top: 0;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.info-box {
-    background: #f1f5f9;
-    padding: 15px 20px;
-    border-radius: 12px;
-    border-left: 5px solid var(--primary);
-    font-weight: 600;
-}
-
-.radio-group {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-    font-size: 1rem;
-    padding: 10px;
-    border-radius: 10px;
-    transition: 0.2s;
-}
-
-label:hover { background: #f1f5f9; }
-
-/* 변인 카드형 확인 섹션 */
-.variable-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-}
-
-.v-card {
-    background: white;
-    padding: 15px 10px;
-    border-radius: 15px;
-    text-align: center;
-    border: 1px solid #e2e8f0;
-}
-
-.v-card .v-label {
-    display: block;
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: #64748b;
-    margin-bottom: 5px;
-}
-
-.v-card .v-value {
-    color: var(--primary);
-    font-weight: 700;
-    font-size: 0.95rem;
-}
-
-.slider-row {
-    margin-bottom: 20px;
-}
-
-.slider-row label {
-    display: block;
-    margin-bottom: 8px;
-    font-size: 0.95rem;
-}
-
-input[type="range"] {
-    width: 100%;
-    height: 6px;
-    background: #cbd5e1;
-    border-radius: 5px;
-    appearance: none;
-    outline: none;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-    appearance: none;
-    width: 22px;
-    height: 22px;
-    background: var(--primary);
-    border: 3px solid white;
-    border-radius: 50%;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.warning-alert {
-    background: #fef2f2;
-    color: var(--warning);
-    padding: 12px;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    font-weight: bold;
-    border: 1px solid #fecaca;
-    margin-bottom: 15px;
-    display: none;
-}
-
-.live-preview {
-    background: var(--primary);
-    color: white;
-    padding: 20px;
-    border-radius: 15px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.25rem;
-    margin-bottom: 20px;
-    box-shadow: 0 10px 20px rgba(0, 51, 102, 0.2);
-}
-
-.live-preview span { color: var(--accent); }
-
-.btn {
-    width: 100%;
-    padding: 18px;
-    border-radius: 12px;
-    border: none;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: 0.3s;
-    color: white;
-}
-
-.btn-primary { background: var(--primary); }
-.btn-accent { background: #fb8c00; }
-.btn-success { background: var(--accent); }
-.btn:hover { opacity: 0.9; transform: translateY(-2px); }
-
-.table-wrapper {
-    overflow-x: auto;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-}
-
-th { background: #f8fafc; padding: 12px; color: var(--primary); }
-td { padding: 12px; border-top: 1px solid #e2e8f0; text-align: center; }
-
-.quiz-box {
-    line-height: 2.2;
-    font-size: 1.1rem;
-    margin-bottom: 20px;
-}
-
-select {
-    padding: 6px 12px;
-    border-radius: 8px;
-    border: 2px solid #cbd5e1;
-    font-family: inherit;
-    font-weight: bold;
-    color: var(--primary);
-}
-
-.feedback-panel {
-    margin-top: 20px;
-    padding: 20px;
-    border-radius: 15px;
-    display: none;
-    animation: fadeIn 0.4s;
-}
-
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-.pass { background: #ecfdf5; border: 1px solid #6ee7b7; color: #065f46; }
-.fail { background: #fff1f2; border: 1px solid #fda4af; color: #9f1239; }
-
-.chart-canvas { margin-top: 20px; max-height: 400px; }
-
-#### 📄 script.js
-```javascript
-let log = [];
-let chart = null;
-
-// 초기화
-window.onload = () => {
-    initExperiment();
-};
-
-// 탐구 주제 변경에 따른 변인 확인 로직 (요청하신 3번 항목 수정)
-function initExperiment() {
-    const sel = document.querySelector('input[name="independent"]:checked').value;
-    const vInfo = document.getElementById('variable-info');
-    
-    // 데이터 및 UI 초기화
-    log = [];
-    updateTable();
-    if(chart) chart.destroy();
-    
-    // 슬라이더 기본값 복원
-    document.getElementById('input-light').value = 50;
-    document.getElementById('input-co2').value = 0.1;
-    document.getElementById('input-temp').value = 20;
-
-    let indep, ctrl, dep = "기포 발생 수";
-
-    if(sel === 'light') {
-        indep = "빛의 세기 (lux)";
-        ctrl = "이산화탄소 농도, 온도";
-    } else if(sel === 'co2') {
-        indep = "이산화탄소 농도 (%)";
-        ctrl = "빛의 세기, 온도";
-    } else {
-        indep = "실험 온도 (°C)";
-        ctrl = "빛의 세기, CO₂ 농도";
-    }
-
-    // 3. 변인 확인 섹션 업데이트
-    vInfo.innerHTML = `
-        <div class="v-card"><span class="v-label">독립변인(조작)</span><span class="v-value">${indep}</span></div>
-        <div class="v-card"><span class="v-label">통제변인(유지)</span><span class="v-value">${ctrl}</span></div>
-        <div class="v-card"><span class="v-label">종속변인(측정)</span><span class="v-value">${dep}</span></div>
-    `;
-
-    document.getElementById('q-indep-name').innerText = indep.split(' ')[0];
-    updateTableHeader(indep);
-    syncRealtime();
-}
-
-// 과학적 수식 기반 광합성량 계산 엔진
-function calculateRate() {
-    const sel = document.querySelector('input[name="independent"]:checked').value;
-    const L = parseFloat(document.getElementById('input-light').value);
-    const C = parseFloat(document.getElementById('input-co2').value);
-    const T = parseFloat(document.getElementById('input-temp').value);
-    
-    let rate = 0;
-
-    // 과학적 원리 적용
-    if(sel === 'light') {
-        rate = L >= 80 ? 33 : Math.round(40 * (L / (L + 16)));
-    } else if(sel === 'co2') {
-        rate = C >= 0.25 ? 40 : Math.round(43 * (C / (C + 0.02)));
-    } else {
-        // 온도 실험: 35도 정점
-        if(T <= 35) rate = Math.round(5 + (T * 0.9));
-        else rate = Math.round(Math.max(0, 36 - ((T - 35) * 3)));
-    }
-
-    // 변인 통제 체크 (하나라도 기본값에서 벗어나면 페널티)
-    let violated = false;
-    if(sel === 'light' && (C !== 0.1 || T !== 20)) violated = true;
-    if(sel === 'co2' && (L !== 50 || T !== 20)) violated = true;
-    if(sel === 'temp' && (L !== 50 || C !== 0.1)) violated = true;
-
-    document.getElementById('ctrl-warning').style.display = violated ? 'block' : 'none';
-    return violated ? Math.round(rate * 0.3) : rate;
-}
-
-function syncRealtime() {
-    document.getElementById('disp-light').innerText = document.getElementById('input-light').value;
-    document.getElementById('disp-co2').innerText = document.getElementById('input-co2').value;
-    document.getElementById('disp-temp').innerText = document.getElementById('input-temp').value;
-    document.getElementById('live-bubble').innerText = calculateRate();
-}
-
-function recordData() {
-    const sel = document.querySelector('input[name="independent"]:checked').value;
-    const val = sel === 'light' ? document.getElementById('input-light').value : (sel === 'co2' ? document.getElementById('input-co2').value : document.getElementById('input-temp').value);
-    const rate = calculateRate();
-
-    log = log.filter(d => d.x !== val);
-    log.push({ x: parseFloat(val), y: rate });
-    log.sort((a, b) => a.x - b.x);
-    updateTable();
-}
-
-function updateTableHeader(name) {
-    document.getElementById('table-header').innerHTML = `<th>${name}</th><th>기포 수 (🫧/분)</th>`;
-}
-
-function updateTable() {
-    const body = document.getElementById('table-body');
-    body.innerHTML = '';
-    log.forEach(d => {
-        body.innerHTML += `<tr><td>${d.x}</td><td>${d.y} 🫧</td></tr>`;
-    });
-}
-
-function drawChart() {
-    if(log.length < 2) { alert("데이터를 최소 2개 이상 기록해야 그래프를 그릴 수 있습니다."); return; }
-    const ctx = document.getElementById('myChart').getContext('2d');
-    if(chart) chart.destroy();
-
-    chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: log.map(d => d.x),
-            datasets: [{
-                label: '광합성량(기포 수)',
-                data: log.map(d => d.y),
-                borderColor: '#003366',
-                backgroundColor: 'rgba(17, 202, 160, 0.15)',
-                borderWidth: 4,
-                pointRadius: 6,
-                pointBackgroundColor: '#11caa0',
-                fill: true,
-                tension: 0.3
-            }]
-        },
-        options: {
-            scales: {
-                x: { title: { display: true, text: '독립변인 수치' } },
-                y: { min: 0, max: 50, title: { display: true, text: '기포 수' } }
-            }
-        }
-    });
-}
-
-function checkAnswer() {
-    const sel = document.querySelector('input[name="independent"]:checked').value;
-    const a1 = document.getElementById('sel-phase1').value;
-    const a2 = document.getElementById('sel-phase2').value;
-    const feedback = document.getElementById('grade-feedback');
-
-    if(!a1 || !a2) { alert("결론의 모든 항목을 선택하세요."); return; }
-
-    let correct = false;
-    if(sel === 'temp') {
-        if(a1 === 'up' && a2 === 'down') correct = true;
-    } else {
-        if(a1 === 'up' && a2 === 'flat') correct = true;
-    }
-
-    feedback.style.display = "block";
-    feedback.className = correct ? "feedback-panel pass" : "feedback-panel fail";
-    feedback.innerHTML = correct ? `<h3>🎉 정답입니다!</h3>탐구 결과를 바탕으로 과학적 결론을 정확히 도출했습니다.` : `<h3>😥 다시 확인해보세요.</h3>그래프의 전체적인 모양을 다시 관찰해보세요. 변화의 순서가 맞나요?`;
-    feedback.scrollIntoView({ behavior: 'smooth' });
-}
-
----
-
-### 💡 GitHub 저장소 구성 및 배포 팁
-
-1.  GitHub에서 새로운 레포지토리(예: `photosynthesis-lab`)를 만듭니다.
-2.  위의 세 파일을 각각 파일명에 맞춰 생성하고 내용을 붙여넣습니다.
-3.  **Settings > Pages** 메뉴로 이동합니다.
-4.  **Build and deployment > Branch** 항목에서 `main` 브랜치를 선택하고 `Save`를 누릅니다.
-5.  약 1~2분 뒤 생성된 URL로 접속하면 전 세계 어디서든 사용 가능한 가상 실험실이 배포됩니다.
-
-모든 기능이 유기적으로 연동되어 있으며, 전문적인 디자인까지 갖춘 최종 버전입니다. 수업에 큰 도움이 되길 바랍니다! 🌿
+이 코드를 사용하시면 훨씬 전문적이고 예쁜 실험 앱을 제공하실 수 있을 것입니다! 추가 요청 사항이 있으시면 언제든 말씀해 주세요. 😊
